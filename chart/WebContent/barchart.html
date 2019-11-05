@@ -1,0 +1,51 @@
+<!DOCTYPE html>
+<html>
+  <head>
+  	<meta charset="utf-8">
+	<script src="https://ajax.googleapis.com/ajax/libs/jquery/3.4.1/jquery.min.js"></script>
+    <script type="text/javascript" src="https://www.gstatic.com/charts/loader.js"></script>
+    <script type="text/javascript">
+      google.charts.load('current', {'packages':['bar']});
+      google.charts.setOnLoadCallback(drawChart);
+
+      let bar = [["Day","Total_bill","Tip"]]
+      
+      $.ajax({
+		  url : "/chart/BarcharSer",
+	  	  method :"POST",
+	  	  success : function(json){
+	  		//console.log(json);
+	  		 $(json).each(function(index, item){
+	  			 let barr = [];
+	  		 		barr.push(item.day)
+	  		 		barr.push(item.total)
+	  		 		barr.push(item.tip)
+						bar.push(barr)	
+	  		 }) 
+	  		 console.log(bar)
+	  	  }
+	  })
+      
+      
+      function drawChart() {
+    	  
+        var data = google.visualization.arrayToDataTable(bar);
+
+        var options = {
+          chart: {
+            title: 'Total_tip',
+            subtitle: 'sub',
+          },
+          bars: 'vertical' // Required for Material Bar Charts.
+        };
+
+        var chart = new google.charts.Bar(document.getElementById('barchart_material'));
+
+        chart.draw(data, google.charts.Bar.convertOptions(options));
+      }
+    </script>
+  </head>
+  <body>
+    <div id="barchart_material" style="width: 900px; height: 500px;"></div>
+  </body>
+</html>

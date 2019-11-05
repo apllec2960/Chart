@@ -1,0 +1,60 @@
+<!DOCTYPE html>
+<html>
+<head>
+	<script type="text/javascript" src="https://www.gstatic.com/charts/loader.js"></script>
+	<script src="https://ajax.googleapis.com/ajax/libs/jquery/3.4.1/jquery.min.js"></script>
+<meta charset="UTF-8">
+<title>Insert title here</title>
+<script>
+      google.charts.load('current', {'packages':['corechart']});
+      google.charts.setOnLoadCallback(drawChart);
+	
+      let objson;
+      
+      $.ajax({
+      	url : "/chart/cchart",
+      	method : "POST",
+      	async:false,
+      	success: function(json){
+      		objson = json
+      		
+      	}
+      })
+      
+      let list = [['YEAR','1/4','2/4','3/4','4/4']];
+      
+      $(objson).each(function(index,item){
+    	  let samplelist = [];
+    	  samplelist.push(item.year)
+    	  samplelist.push(item.passengers)
+    	  samplelist.push(item.passengers2)
+    	  samplelist.push(item.passengers3)
+    	  samplelist.push(item.passengers4)
+    	  list.push(samplelist);
+      })
+      
+      console.log(list)
+      
+      function drawChart() {
+        var data = google.visualization.arrayToDataTable(
+          list
+        ,false);
+		
+    
+        
+        var options = {
+          title: '연도별 시즌고객이용',
+          hAxis: {title: 'Year',  titleTextStyle: {color: '#333'}},
+          vAxis: {minValue: 0}
+        };
+
+        var chart = new google.visualization.AreaChart(document.getElementById('chart_div'));
+        chart.draw(data, options);
+      }
+</script>
+</head>
+<body>
+
+    <div id="chart_div" style="width: 100%; height: 500px;"></div>
+</body>
+</html>

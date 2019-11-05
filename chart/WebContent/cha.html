@@ -1,0 +1,57 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta charset="EUC-KR">
+<title>Insert title here</title>
+<script src="/chart/scripts/jquery-3.4.1.min.js"></script>
+<script src="https://ajax.googleapis.com/ajax/libs/jquery/3.4.1/jquery.min.js"></script>
+<script type="text/javascript" src="https://www.gstatic.com/charts/loader.js"></script>
+
+<script type="text/javascript">
+
+google.charts.load('current',
+      {packages: ['corechart', 'line']
+      });
+google.charts.setOnLoadCallback(drawBasic);
+
+function drawBasic() {
+      var data = new google.visualization.DataTable();
+      data.addColumn('number', 'year');
+      data.addColumn('number', 'temp');
+      
+      // ajax mydata 사용
+      $.ajax({
+    	 url :"/chart/data",
+    	 async : false,
+     	 method : "POST",
+         // db에서 데이터 가져와 선으로 출력해보자.
+         success:function(json){
+            $(json).each(function(index, item){
+               data.addRows([[item.year, item.temp]
+                  ]);  
+            });
+         }
+      });
+
+      var options = {
+        hAxis: {
+          title: 'Year'
+        },
+        vAxis: {
+          title: 'Temperate'
+        },
+        backgroundColor : "#f1f8e9"
+      };
+
+      var chart = new google.visualization.LineChart(document.getElementById('chart_div'));
+
+      chart.draw(data, options);
+    }
+</script>
+</head>
+<body>
+    <script type="text/javascript" src="https://www.gstatic.com/charts/loader.js"></script>
+  <div id="chart_div"></div>
+      
+</body>
+</html>

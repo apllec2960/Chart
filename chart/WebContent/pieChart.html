@@ -1,0 +1,49 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <script type="text/javascript" src="https://www.gstatic.com/charts/loader.js"></script>
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.4.1/jquery.min.js"></script>
+    <script type="text/javascript">
+      google.charts.load("current", {packages:["corechart"]});
+      google.charts.setOnLoadCallback(drawChart);
+      
+      let dayCount = new Array();
+      let dayy = new Array();
+      $.ajax({
+    	  // db에서 데이터 가져와 선으로 출력해보자.
+    	  url : "/chart/pieDay",
+    	  method : "POST",
+    	  async : false,
+    	  success : function(json){
+    		  $(json).each(function(index, item){
+    			  dayCount.push(item.size);
+    			  console.log(item.size);
+    			  dayy.push(item.day);
+      		      console.log(item.day);
+    		  });
+    	  }
+      });
+      
+      function drawChart() {
+        var data = google.visualization.arrayToDataTable([
+          ['Day', 'Count per Day'],
+          [dayy[0], dayCount[0]],
+          [dayy[1], dayCount[1]],
+          [dayy[2], dayCount[2]],
+          [dayy[3], dayCount[3]]
+        ]);
+
+        var options = {
+          title: 'Count per Day',
+          is3D: true,
+        };
+
+        var chart = new google.visualization.PieChart(document.getElementById('piechart_3d'));
+        chart.draw(data, options);
+      }
+    </script>
+  </head>
+  <body>
+    <div id="piechart_3d" style="width: 900px; height: 500px;"></div>
+  </body>
+</html>
